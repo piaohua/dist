@@ -7,7 +7,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/goerlang/etf"
 	"io"
 	"io/ioutil"
 	"log"
@@ -16,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/goerlang/etf"
 )
 
 var dTrace bool
@@ -48,6 +49,8 @@ const (
 	UNICODE_IO                 = 0x1000
 	DIST_HDR_ATOM_CACHE        = 0x2000
 	SMALL_ATOM_TAGS            = 0x4000
+	UTF8_ATOMS                 = 0x10000
+	MAP_TAG                    = 0x20000
 )
 
 type nodeFlag flagId
@@ -97,7 +100,7 @@ func NewNodeDesc(name, cookie string, isHidden bool) (nd *NodeDesc) {
 		Hidden:  isHidden,
 		remote:  nil,
 		state:   HANDSHAKE,
-		flag:    toNodeFlag(PUBLISHED, UNICODE_IO, EXTENDED_PIDS_PORTS, EXTENDED_REFERENCES, DIST_HDR_ATOM_CACHE, HIDDEN_ATOM_CACHE, SMALL_ATOM_TAGS),
+		flag:    toNodeFlag(PUBLISHED, UNICODE_IO, EXTENDED_PIDS_PORTS, EXTENDED_REFERENCES, DIST_HDR_ATOM_CACHE, HIDDEN_ATOM_CACHE, SMALL_ATOM_TAGS, UTF8_ATOMS, MAP_TAG),
 		version: 5,
 		term:    new(etf.Context),
 	}
@@ -344,6 +347,8 @@ func (nd NodeDesc) Flags() (flags []string) {
 		UNICODE_IO:          "UNICODE_IO",
 		DIST_HDR_ATOM_CACHE: "DIST_HDR_ATOM_CACHE",
 		SMALL_ATOM_TAGS:     "SMALL_ATOM_TAGS",
+		UTF8_ATOMS:          "UTF8_ATOMS",
+		MAP_TAG:             "MAP_TAG",
 	}
 
 	for k, v := range fs {
